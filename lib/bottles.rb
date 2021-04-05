@@ -1,49 +1,68 @@
 class Bottles
+  NoMore = lambda do |_|
+      "No more bottles of beer on the wall, " +
+      "no more bottles of beer.\n" +
+      "Go to the store and buy some more, " +
+      "99 bottles of beer on the wall.\n"
+  end
+
+  LastOne = lambda do |_|
+      "1 bottle of beer on the wall, " +
+      "1 bottle of beer.\n" +
+      "Take it down and pass it around, " +
+      "no more bottles of beer on the wall.\n"
+  end
+
+  NearlyLastOne = lambda do |_|
+      "2 bottles of beer on the wall, " +
+      "2 bottles of beer.\n" +
+      "Take one down and pass it around, " +
+      "1 bottle of beer on the wall.\n"
+  end
+
+  Default = lambda do |verse|
+    "#{verse.number} bottles of beer on the wall, " +
+    "#{verse.number} bottles of beer.\n" +
+    "Take one down and pass it around, " +
+    "#{verse.number - 1} bottles of beer on the wall.\n"
+  end
+
   def song
     verses(99, 0)
   end
 
   def verses(starting_bottle, end_bottle)
-    verses_list = (end_bottle..starting_bottle).map { |i| verse(i)}.reverse
+    verses_list = (end_bottle..starting_bottle).map { |i| verse(i) }.reverse
     verses_list.join("\n")
   end
 
-  def verse(start_bottle)
-    "#{bottle_no(start_bottle).capitalize} #{bottle_word(start_bottle)} of beer on the wall, " +
-    "#{bottle_no(start_bottle)} #{bottle_word(start_bottle)} of beer.\n" +
-    buy_or_take(start_bottle) +
-    "#{bottle_no(bottle_left(start_bottle))} #{bottle_word(bottle_left(start_bottle))} of beer on the wall.\n"
+  def verse(number)
+    verse_for(number).text
   end
 
-  private
-
-  def bottle_no(number)
-    number === 0 ? 'no more' : number.to_s
-  end
-
-  def bottle_word(number)
+  def verse_for(number)
     case number
-    when 1
-      'bottle'
     when 0
-      'bottles'
+      Verse.new(number, &NoMore)
+    when 1
+      Verse.new(number, &LastOne)
+    when 2
+      Verse.new(number, &NearlyLastOne)
     else
-      'bottles'
+      Verse.new(number, &Default)
     end
   end
+end
 
-  def buy_or_take(number)
-    case number
-    when 1
-      "Take it down and pass it around, "
-    when 0
-      "Go to the store and buy some more, "
-    else
-      "Take one down and pass it around, "
-    end
+class Verse
+  attr_reader :number
+
+  def initialize(number, &lyric)
+    @number = number
+    @lyric = lyric
   end
 
-  def bottle_left(start_bottle)
-    start_bottle == 0 ? 99 : start_bottle - 1
+  def text
+    @lyric.call self
   end
 end
