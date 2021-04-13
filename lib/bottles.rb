@@ -26,11 +26,15 @@ class BottleNumber
   end
 
   def self.registry
-    @registry ||= []
+    @registry ||= [BottleNumber]
   end
 
   def self.register(candidate)
     registry.unshift(candidate)
+  end
+
+  def self.inherited(candidate)
+    register(candidate)
   end
 
   def self.handle?(_)
@@ -64,8 +68,6 @@ class BottleNumber
   def container
     'bottles'
   end
-
-  BottleNumber.register(self)
 end
 
 class BottleNumber0 < BottleNumber
@@ -84,8 +86,6 @@ class BottleNumber0 < BottleNumber
   def successor
     BottleNumber.for(99)
   end
-
-  BottleNumber.register(self)
 end
 
 class BottleNumber1 < BottleNumber
@@ -100,8 +100,6 @@ class BottleNumber1 < BottleNumber
   def pronoun
     'it'
   end
-
-  BottleNumber.register(self)
 end
 
 class BottleNumber6 < BottleNumber
@@ -116,6 +114,4 @@ class BottleNumber6 < BottleNumber
   def container
     'six-pack'
   end
-
-  BottleNumber.register(self)
 end
