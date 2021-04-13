@@ -22,13 +22,19 @@ class BottleNumber
   attr_reader :number
 
   def self.for(number)
-    Hash
-      .new(BottleNumber)
-      .merge({
-        0 => BottleNumber0,
-        1 => BottleNumber1,
-        6 => BottleNumber6
-      })[number].new(number)
+    @registry.find { |candidate| candidate.handle?(number) }.new(number)
+  end
+
+  def self.registry
+    @registry ||= []
+  end
+
+  def self.register(candidate)
+    registry.unshift(candidate)
+  end
+
+  def self.handle?(_)
+    true
   end
 
   def initialize(number)
@@ -58,9 +64,15 @@ class BottleNumber
   def container
     'bottles'
   end
+
+  BottleNumber.register(self)
 end
 
 class BottleNumber0 < BottleNumber
+  def self.handle?(number)
+    number.zero?
+  end
+
   def quantity
     'no more'
   end
@@ -72,9 +84,15 @@ class BottleNumber0 < BottleNumber
   def successor
     BottleNumber.for(99)
   end
+
+  BottleNumber.register(self)
 end
 
 class BottleNumber1 < BottleNumber
+  def self.handle?(number)
+    number == 1
+  end
+
   def container
     'bottle'
   end
@@ -82,14 +100,22 @@ class BottleNumber1 < BottleNumber
   def pronoun
     'it'
   end
+
+  BottleNumber.register(self)
 end
 
 class BottleNumber6 < BottleNumber
+  def self.handle?(number)
+    number == 6
+  end
+
   def quantity
-    "1"
+    '1'
   end
 
   def container
     'six-pack'
   end
+
+  BottleNumber.register(self)
 end
