@@ -15,16 +15,34 @@ class Bottles
   end
 
   def verse(number)
-    verse_template.new(number).lyric
+    verse_template.lyric(number)
   end
 end
 
-class BottleNumber
+class BottleVerse
   attr_reader :number
 
-  def self.for(number)
-    @registry.find { |candidate| candidate.handle?(number) }.new(number)
+  def self.lyric(number)
+    new(number).lyric
   end
+
+  def initialize(number)
+    @number = number
+  end
+
+  def lyric
+    bottle_number = BottleNumber.for(number)
+
+    "#{bottle_number} of beer on the wall, ".capitalize +
+    "#{bottle_number} of beer.\n" +
+    "#{bottle_number.action}, " +
+    "#{bottle_number.successor} of beer on the wall.\n"
+  end
+end
+
+# Polymorophism
+class BottleNumber
+  attr_reader :number
 
   def self.registry
     @registry ||= [BottleNumber]
@@ -36,6 +54,10 @@ class BottleNumber
 
   def self.inherited(candidate)
     register(candidate)
+  end
+
+  def self.for(number)
+    @registry.find { |candidate| candidate.handle?(number) }.new(number)
   end
 
   def self.handle?(_)
@@ -68,23 +90,6 @@ class BottleNumber
 
   def container
     'bottles'
-  end
-end
-
-class BottleVerse
-  attr_reader :number
-
-  def initialize(number)
-    @number = number
-  end
-
-  def lyric
-    bottle_number = BottleNumber.for(number)
-
-    "#{bottle_number} of beer on the wall, ".capitalize +
-    "#{bottle_number} of beer.\n" +
-    "#{bottle_number.action}, " +
-    "#{bottle_number.successor} of beer on the wall.\n"
   end
 end
 
