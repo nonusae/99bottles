@@ -15,7 +15,7 @@ class Bottles
   end
 
   def verse(number)
-    verse_template.lyric(number)
+    verse_template.lyrics(number)
   end
 end
 
@@ -26,7 +26,7 @@ class BottleVerse
     new(BottleNumber.for(number))
   end
 
-  def self.lyric(number)
+  def self.lyrics(number)
     self.for(number).lyrics
   end
 
