@@ -1,7 +1,7 @@
 gem 'minitest', '~> 5.4'
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/bottles'
+require_relative '../lib/count_down_song'
 
 class BottleNumberTest < Minitest::Test
   def test_retur_correct_bottle_number_for_given_number

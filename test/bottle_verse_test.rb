@@ -1,10 +1,16 @@
 gem 'minitest', '~> 5.4'
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/bottles'
-
+require_relative '../lib/count_down_song'
+require_relative './verse_role_test'
 
 class BottleVerseTest < Minitest::Test
+  include VerseRoleTest
+
+  def setup
+    @role_player = BottleVerse
+  end
+
   def test_verse_general_rule_upper_bound
     expected =
       "99 bottles of beer on the wall, " +
