@@ -1,4 +1,4 @@
-class Bottles
+class CountDownSong
   attr_reader :verse_template
 
   def initialize(verse_template: BottleVerse)
